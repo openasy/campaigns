@@ -1,0 +1,6025 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "OpenAsy Campaigns",
+    "version": "0.1.0",
+    "description": "Campaigns in one calendar with their budget, goals, approvals, tagged links and spend, and what each brought from Analytics, Messages and CRM. Viewers read everything; editors plan and change campaigns; approvers named on a campaign approve it; admins also delete campaigns that ran.",
+    "license": {
+      "name": "AGPL-3.0-only",
+      "identifier": "AGPL-3.0-only"
+    }
+  },
+  "servers": [
+    {
+      "url": "/"
+    }
+  ],
+  "security": [
+    {
+      "session": []
+    },
+    {
+      "apiToken": []
+    },
+    {
+      "adminToken": []
+    }
+  ],
+  "paths": {
+    "/api/v1/version": {
+      "get": {
+        "operationId": "version",
+        "tags": [
+          "Product"
+        ],
+        "summary": "Product and version",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Version"
+                }
+              }
+            }
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/v1/products": {
+      "get": {
+        "operationId": "products",
+        "tags": [
+          "Product"
+        ],
+        "summary": "The install's other products",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductList"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "403": {
+            "$ref": "#/components/responses/Problem"
+          }
+        },
+        "security": [
+          {
+            "session": []
+          },
+          {
+            "apiToken": []
+          },
+          {
+            "adminToken": []
+          }
+        ],
+        "x-openasy-role": "viewer",
+        "description": "Needs the viewer role."
+      }
+    },
+    "/api/v1/summary": {
+      "get": {
+        "operationId": "summary",
+        "tags": [
+          "Product"
+        ],
+        "summary": "Overview",
+        "description": "Campaigns by status, those waiting for the caller's approval, the caller's tasks, this month's budget and spend, and spend nobody claims.\n\nNeeds the viewer role.",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Summary"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "403": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "503": {
+            "$ref": "#/components/responses/Problem"
+          }
+        },
+        "security": [
+          {
+            "session": []
+          },
+          {
+            "apiToken": []
+          },
+          {
+            "adminToken": []
+          }
+        ],
+        "x-openasy-role": "viewer"
+      }
+    },
+    "/api/v1/settings": {
+      "get": {
+        "operationId": "settings",
+        "tags": [
+          "Product"
+        ],
+        "summary": "The settings file as applied",
+        "description": "Read-only: the file (CAMPAIGNS_CONFIG) is the only way to change them.\n\nNeeds the viewer role.",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Settings"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "403": {
+            "$ref": "#/components/responses/Problem"
+          }
+        },
+        "security": [
+          {
+            "session": []
+          },
+          {
+            "apiToken": []
+          },
+          {
+            "adminToken": []
+          }
+        ],
+        "x-openasy-role": "viewer"
+      }
+    },
+    "/api/v1/team": {
+      "get": {
+        "operationId": "team",
+        "tags": [
+          "Product"
+        ],
+        "summary": "Members, for owners and approvers",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Team"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "403": {
+            "$ref": "#/components/responses/Problem"
+          }
+        },
+        "security": [
+          {
+            "session": []
+          },
+          {
+            "apiToken": []
+          },
+          {
+            "adminToken": []
+          }
+        ],
+        "x-openasy-role": "viewer",
+        "description": "Needs the viewer role."
+      }
+    },
+    "/api/v1/integrations": {
+      "get": {
+        "operationId": "integrations",
+        "tags": [
+          "Product"
+        ],
+        "summary": "Linked products and ad platforms",
+        "description": "Each link's address, whether its token is set, and how its last read went.\n\nNeeds the viewer role.",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Integrations"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "403": {
+            "$ref": "#/components/responses/Problem"
+          }
+        },
+        "security": [
+          {
+            "session": []
+          },
+          {
+            "apiToken": []
+          },
+          {
+            "adminToken": []
+          }
+        ],
+        "x-openasy-role": "viewer"
+      }
+    },
+    "/api/v1/naming": {
+      "get": {
+        "operationId": "naming",
+        "tags": [
+          "Campaigns"
+        ],
+        "summary": "The utm_campaign the naming rules make",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "start",
+            "in": "query",
+            "required": false,
+            "description": "The start day; today when left out.",
+            "schema": {
+              "type": "string",
+              "format": "date",
+              "examples": [
+                "2026-10-01"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Naming"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "403": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "422": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "503": {
+            "$ref": "#/components/responses/Problem"
+          }
+        },
+        "security": [
+          {
+            "session": []
+          },
+          {
+            "apiToken": []
+          },
+          {
+            "adminToken": []
+          }
+        ],
+        "x-openasy-role": "viewer",
+        "description": "Needs the viewer role."
+      }
+    },
+    "/api/v1/campaigns": {
+      "get": {
+        "operationId": "listCampaigns",
+        "tags": [
+          "Campaigns"
+        ],
+        "summary": "Campaigns, for the calendar",
+        "parameters": [
+          {
+            "name": "from",
+            "in": "query",
+            "required": false,
+            "description": "Only campaigns that end on or after this day.",
+            "schema": {
+              "type": "string",
+              "format": "date",
+              "examples": [
+                "2026-10-01"
+              ]
+            }
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "required": false,
+            "description": "Only campaigns that start on or before this day.",
+            "schema": {
+              "type": "string",
+              "format": "date",
+              "examples": [
+                "2026-10-01"
+              ]
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "description": "planned, live, ended or cancelled.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "channel",
+            "in": "query",
+            "required": false,
+            "description": "Only campaigns on this channel.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "q",
+            "in": "query",
+            "required": false,
+            "description": "Part of the name, utm_campaign or owner.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CampaignList"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "403": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "422": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "503": {
+            "$ref": "#/components/responses/Problem"
+          }
+        },
+        "security": [
+          {
+            "session": []
+          },
+          {
+            "apiToken": []
+          },
+          {
+            "adminToken": []
+          }
+        ],
+        "x-openasy-role": "viewer",
+        "description": "Needs the viewer role."
+      },
+      "post": {
+        "operationId": "createCampaign",
+        "tags": [
+          "Campaigns"
+        ],
+        "summary": "Plan a campaign",
+        "description": "utm_campaign is made by naming.campaign unless utm is given; it must follow the rules and be no other campaign's (409).\n\nNeeds the editor role.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CampaignInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Planned.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CampaignDetail"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "401": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "403": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "409": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "422": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "503": {
+            "$ref": "#/components/responses/Problem"
+          }
+        },
+        "security": [
+          {
+            "session": []
+          },
+          {
+            "apiToken": []
+          },
+          {
+            "adminToken": []
+          }
+        ],
+        "x-openasy-role": "editor"
+      }
+    },
+    "/api/v1/campaigns/{id}": {
+      "get": {
+        "operationId": "getCampaign",
+        "tags": [
+          "Campaigns"
+        ],
+        "summary": "A campaign with its links, tasks, assets and what happened",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "The campaign's id.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CampaignDetail"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "403": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "404": {
+            "$ref": "#/components/responses/Problem"
+          }
+        },
+        "security": [
+          {
+            "session": []
+          },
+          {
+            "apiToken": []
+          },
+          {
+            "adminToken": []
+          }
+        ],
+        "x-openasy-role": "viewer",
+        "description": "Needs the viewer role."
+      },
+      "patch": {
+        "operationId": "updateCampaign",
+        "tags": [
+          "Campaigns"
+        ],
+        "summary": "Change a campaign",
+        "description": "A change to its name, dates, brief, message, audience, budget, channels or goals while it is planned sets every approval back to waiting. utm_campaign changes only while it is planned and has no links. An ended or cancelled campaign changes only its brief, message, owner, goals, adNames and messagesIds.\n\nNeeds the editor role.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "The campaign's id.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CampaignInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CampaignDetail"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "401": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "403": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "404": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "409": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "422": {
+            "$ref": "#/components/responses/Problem"
+          }
+        },
+        "security": [
+          {
+            "session": []
+          },
+          {
+            "apiToken": []
+          },
+          {
+            "adminToken": []
+          }
+        ],
+        "x-openasy-role": "editor"
+      },
+      "delete": {
+        "operationId": "deleteCampaign",
+        "tags": [
+          "Campaigns"
+        ],
+        "summary": "Delete a campaign",
+        "description": "Editors delete planned and cancelled campaigns; one that has run only an admin deletes. Spend from the ad platforms stays, unclaimed.\n\nNeeds the editor role.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "The campaign's id.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Deleted."
+          },
+          "401": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "403": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "404": {
+            "$ref": "#/components/responses/Problem"
+          }
+        },
+        "security": [
+          {
+            "session": []
+          },
+          {
+            "apiToken": []
+          },
+          {
+            "adminToken": []
+          }
+        ],
+        "x-openasy-role": "editor"
+      }
+    },
+    "/api/v1/campaigns/{id}/approval": {
+      "post": {
+        "operationId": "decide",
+        "tags": [
+          "Approvals"
+        ],
+        "summary": "Approve, or ask for changes",
+        "description": "Only a member the campaign names as an approver, for themselves; any role.\n\nNeeds the viewer role.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "The campaign's id.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Decision"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CampaignDetail"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "401": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "403": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "404": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "409": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "422": {
+            "$ref": "#/components/responses/Problem"
+          }
+        },
+        "security": [
+          {
+            "session": []
+          },
+          {
+            "apiToken": []
+          },
+          {
+            "adminToken": []
+          }
+        ],
+        "x-openasy-role": "viewer"
+      }
+    },
+    "/api/v1/campaigns/{id}/launch": {
+      "post": {
+        "operationId": "launch",
+        "tags": [
+          "Approvals"
+        ],
+        "summary": "Mark live",
+        "description": "Refused (409) until every approver has approved. With automation.launch in the file, the playbook's webhook is sent campaign_launched.\n\nNeeds the editor role.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "The campaign's id.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Launched"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "403": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "404": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "409": {
+            "$ref": "#/components/responses/Problem"
+          }
+        },
+        "security": [
+          {
+            "session": []
+          },
+          {
+            "apiToken": []
+          },
+          {
+            "adminToken": []
+          }
+        ],
+        "x-openasy-role": "editor"
+      }
+    },
+    "/api/v1/campaigns/{id}/end": {
+      "post": {
+        "operationId": "end",
+        "tags": [
+          "Approvals"
+        ],
+        "summary": "End a live campaign",
+        "description": "A live campaign also ends by itself the day after its end day.\n\nNeeds the editor role.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "The campaign's id.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CampaignDetail"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "403": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "404": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "409": {
+            "$ref": "#/components/responses/Problem"
+          }
+        },
+        "security": [
+          {
+            "session": []
+          },
+          {
+            "apiToken": []
+          },
+          {
+            "adminToken": []
+          }
+        ],
+        "x-openasy-role": "editor"
+      }
+    },
+    "/api/v1/campaigns/{id}/cancel": {
+      "post": {
+        "operationId": "cancel",
+        "tags": [
+          "Approvals"
+        ],
+        "summary": "Cancel a campaign",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "The campaign's id.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CampaignDetail"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "403": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "404": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "409": {
+            "$ref": "#/components/responses/Problem"
+          }
+        },
+        "security": [
+          {
+            "session": []
+          },
+          {
+            "apiToken": []
+          },
+          {
+            "adminToken": []
+          }
+        ],
+        "x-openasy-role": "editor",
+        "description": "Needs the editor role."
+      }
+    },
+    "/api/v1/campaigns/{id}/results": {
+      "get": {
+        "operationId": "results",
+        "tags": [
+          "Results"
+        ],
+        "summary": "What a campaign brought and what it cost",
+        "description": "As last read from Analytics, Messages and CRM: visits, goals, sends and won deals by channel, each deal counted for its first and its last campaign, and ROI by each.\n\nNeeds the viewer role.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "The campaign's id.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Results"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "403": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "404": {
+            "$ref": "#/components/responses/Problem"
+          }
+        },
+        "security": [
+          {
+            "session": []
+          },
+          {
+            "apiToken": []
+          },
+          {
+            "adminToken": []
+          }
+        ],
+        "x-openasy-role": "viewer"
+      }
+    },
+    "/api/v1/campaigns/{id}/links": {
+      "post": {
+        "operationId": "createLink",
+        "tags": [
+          "Links"
+        ],
+        "summary": "Make a tagged link",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "The campaign's id.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LinkInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The same link was made before.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Link"
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "Made.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Link"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "401": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "403": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "404": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "409": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "422": {
+            "$ref": "#/components/responses/Problem"
+          }
+        },
+        "security": [
+          {
+            "session": []
+          },
+          {
+            "apiToken": []
+          },
+          {
+            "adminToken": []
+          }
+        ],
+        "x-openasy-role": "editor",
+        "description": "Needs the editor role."
+      }
+    },
+    "/api/v1/campaigns/{id}/tasks": {
+      "post": {
+        "operationId": "createTask",
+        "tags": [
+          "Work"
+        ],
+        "summary": "Add a task",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "The campaign's id.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TaskInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Added.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Task"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "401": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "403": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "404": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "422": {
+            "$ref": "#/components/responses/Problem"
+          }
+        },
+        "security": [
+          {
+            "session": []
+          },
+          {
+            "apiToken": []
+          },
+          {
+            "adminToken": []
+          }
+        ],
+        "x-openasy-role": "editor",
+        "description": "Needs the editor role."
+      }
+    },
+    "/api/v1/campaigns/{id}/assets": {
+      "post": {
+        "operationId": "createAsset",
+        "tags": [
+          "Work"
+        ],
+        "summary": "Add an asset, by its address",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "The campaign's id.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AssetInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Added.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Asset"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "401": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "403": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "404": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "422": {
+            "$ref": "#/components/responses/Problem"
+          }
+        },
+        "security": [
+          {
+            "session": []
+          },
+          {
+            "apiToken": []
+          },
+          {
+            "adminToken": []
+          }
+        ],
+        "x-openasy-role": "editor",
+        "description": "Needs the editor role."
+      }
+    },
+    "/api/v1/links": {
+      "get": {
+        "operationId": "listLinks",
+        "tags": [
+          "Links"
+        ],
+        "summary": "Tagged links, newest first",
+        "parameters": [
+          {
+            "name": "campaign",
+            "in": "query",
+            "required": false,
+            "description": "Only this campaign's.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LinkList"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "403": {
+            "$ref": "#/components/responses/Problem"
+          }
+        },
+        "security": [
+          {
+            "session": []
+          },
+          {
+            "apiToken": []
+          },
+          {
+            "adminToken": []
+          }
+        ],
+        "x-openasy-role": "viewer",
+        "description": "Needs the viewer role."
+      }
+    },
+    "/api/v1/links/{id}": {
+      "delete": {
+        "operationId": "deleteLink",
+        "tags": [
+          "Links"
+        ],
+        "summary": "Delete a link",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "The link's id.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Deleted."
+          },
+          "401": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "403": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "404": {
+            "$ref": "#/components/responses/Problem"
+          }
+        },
+        "security": [
+          {
+            "session": []
+          },
+          {
+            "apiToken": []
+          },
+          {
+            "adminToken": []
+          }
+        ],
+        "x-openasy-role": "editor",
+        "description": "Needs the editor role."
+      }
+    },
+    "/api/v1/links/{id}/qr": {
+      "get": {
+        "operationId": "linkQr",
+        "tags": [
+          "Links"
+        ],
+        "summary": "A link's QR code",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "The link's id.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "format",
+            "in": "query",
+            "required": false,
+            "description": "svg (default) or png, 1024 pixels.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The QR code.",
+            "content": {
+              "image/svg+xml": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "image/png": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "403": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "404": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "422": {
+            "$ref": "#/components/responses/Problem"
+          }
+        },
+        "security": [
+          {
+            "session": []
+          },
+          {
+            "apiToken": []
+          },
+          {
+            "adminToken": []
+          }
+        ],
+        "x-openasy-role": "viewer",
+        "description": "Needs the viewer role."
+      }
+    },
+    "/api/v1/tasks": {
+      "get": {
+        "operationId": "listTasks",
+        "tags": [
+          "Work"
+        ],
+        "summary": "Tasks of every campaign",
+        "parameters": [
+          {
+            "name": "owner",
+            "in": "query",
+            "required": false,
+            "description": "me, none or a member's id.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "open",
+            "in": "query",
+            "required": false,
+            "description": "false for done tasks too.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TaskList"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "403": {
+            "$ref": "#/components/responses/Problem"
+          }
+        },
+        "security": [
+          {
+            "session": []
+          },
+          {
+            "apiToken": []
+          },
+          {
+            "adminToken": []
+          }
+        ],
+        "x-openasy-role": "viewer",
+        "description": "Needs the viewer role."
+      }
+    },
+    "/api/v1/tasks/{id}": {
+      "patch": {
+        "operationId": "updateTask",
+        "tags": [
+          "Work"
+        ],
+        "summary": "Change or tick off a task",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "The task's id.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TaskInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Task"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "401": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "403": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "404": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "422": {
+            "$ref": "#/components/responses/Problem"
+          }
+        },
+        "security": [
+          {
+            "session": []
+          },
+          {
+            "apiToken": []
+          },
+          {
+            "adminToken": []
+          }
+        ],
+        "x-openasy-role": "editor",
+        "description": "Needs the editor role."
+      },
+      "delete": {
+        "operationId": "deleteTask",
+        "tags": [
+          "Work"
+        ],
+        "summary": "Delete a task",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "The task's id.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Deleted."
+          },
+          "401": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "403": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "404": {
+            "$ref": "#/components/responses/Problem"
+          }
+        },
+        "security": [
+          {
+            "session": []
+          },
+          {
+            "apiToken": []
+          },
+          {
+            "adminToken": []
+          }
+        ],
+        "x-openasy-role": "editor",
+        "description": "Needs the editor role."
+      }
+    },
+    "/api/v1/assets/{id}": {
+      "delete": {
+        "operationId": "deleteAsset",
+        "tags": [
+          "Work"
+        ],
+        "summary": "Delete an asset",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "The asset's id.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Deleted."
+          },
+          "401": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "403": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "404": {
+            "$ref": "#/components/responses/Problem"
+          }
+        },
+        "security": [
+          {
+            "session": []
+          },
+          {
+            "apiToken": []
+          },
+          {
+            "adminToken": []
+          }
+        ],
+        "x-openasy-role": "editor",
+        "description": "Needs the editor role."
+      }
+    },
+    "/api/v1/spend": {
+      "get": {
+        "operationId": "listSpend",
+        "tags": [
+          "Spend"
+        ],
+        "summary": "Spend",
+        "parameters": [
+          {
+            "name": "campaign",
+            "in": "query",
+            "required": false,
+            "description": "A campaign's id.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "from",
+            "in": "query",
+            "required": false,
+            "description": "The first day.",
+            "schema": {
+              "type": "string",
+              "format": "date",
+              "examples": [
+                "2026-10-01"
+              ]
+            }
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "required": false,
+            "description": "The last day.",
+            "schema": {
+              "type": "string",
+              "format": "date",
+              "examples": [
+                "2026-10-01"
+              ]
+            }
+          },
+          {
+            "name": "unmatched",
+            "in": "query",
+            "required": false,
+            "description": "true for spend no campaign claims.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SpendList"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "403": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "422": {
+            "$ref": "#/components/responses/Problem"
+          }
+        },
+        "security": [
+          {
+            "session": []
+          },
+          {
+            "apiToken": []
+          },
+          {
+            "adminToken": []
+          }
+        ],
+        "x-openasy-role": "viewer",
+        "description": "Needs the viewer role."
+      },
+      "post": {
+        "operationId": "addSpend",
+        "tags": [
+          "Spend"
+        ],
+        "summary": "Enter spend by hand",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SpendInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Entered.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Spend"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "401": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "403": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "404": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "422": {
+            "$ref": "#/components/responses/Problem"
+          }
+        },
+        "security": [
+          {
+            "session": []
+          },
+          {
+            "apiToken": []
+          },
+          {
+            "adminToken": []
+          }
+        ],
+        "x-openasy-role": "editor",
+        "description": "Needs the editor role."
+      }
+    },
+    "/api/v1/spend/{id}": {
+      "delete": {
+        "operationId": "deleteSpend",
+        "tags": [
+          "Spend"
+        ],
+        "summary": "Delete spend entered or imported",
+        "description": "Spend read from an ad platform is replaced by the platform's figures at the next read (409).\n\nNeeds the editor role.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "The spend's id.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Deleted."
+          },
+          "401": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "403": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "404": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "409": {
+            "$ref": "#/components/responses/Problem"
+          }
+        },
+        "security": [
+          {
+            "session": []
+          },
+          {
+            "apiToken": []
+          },
+          {
+            "adminToken": []
+          }
+        ],
+        "x-openasy-role": "editor"
+      }
+    },
+    "/api/v1/spend/{id}/assign": {
+      "post": {
+        "operationId": "assignSpend",
+        "tags": [
+          "Spend"
+        ],
+        "summary": "Give an ad platform's campaign to a campaign",
+        "description": "Its name joins the campaign's adNames, so all its days, and those read later, are that campaign's.\n\nNeeds the editor role.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "The spend's id.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SpendAssign"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Spend"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "401": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "403": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "404": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "409": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "422": {
+            "$ref": "#/components/responses/Problem"
+          }
+        },
+        "security": [
+          {
+            "session": []
+          },
+          {
+            "apiToken": []
+          },
+          {
+            "adminToken": []
+          }
+        ],
+        "x-openasy-role": "editor"
+      }
+    },
+    "/api/v1/spend/import": {
+      "post": {
+        "operationId": "importSpend",
+        "tags": [
+          "Spend"
+        ],
+        "summary": "Import spend from CSV",
+        "description": "A row a day, campaign (utm_campaign, id or name) and channel. The same campaign, channel and day replaces what a CSV gave before. check: true reads every row and changes nothing.\n\nNeeds the editor role.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SpendImport"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SpendImported"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "401": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "403": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "413": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "422": {
+            "$ref": "#/components/responses/Problem"
+          }
+        },
+        "security": [
+          {
+            "session": []
+          },
+          {
+            "apiToken": []
+          },
+          {
+            "adminToken": []
+          }
+        ],
+        "x-openasy-role": "editor"
+      }
+    },
+    "/api/v1/spend/sync": {
+      "post": {
+        "operationId": "syncAds",
+        "tags": [
+          "Spend"
+        ],
+        "summary": "Read the ad platforms now",
+        "description": "Google Ads and Meta, for the last ads.days days. Each ad campaign's day replaces what was read before; a day no longer reported goes.\n\nNeeds the editor role.",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdsRead"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "403": {
+            "$ref": "#/components/responses/Problem"
+          }
+        },
+        "security": [
+          {
+            "session": []
+          },
+          {
+            "apiToken": []
+          },
+          {
+            "adminToken": []
+          }
+        ],
+        "x-openasy-role": "editor"
+      }
+    },
+    "/api/v1/report": {
+      "get": {
+        "operationId": "report",
+        "tags": [
+          "Results"
+        ],
+        "summary": "Campaigns of a period, by campaign and channel",
+        "description": "The campaigns that ran in the period, each with its whole results, and the deals won in the period that no campaign touched.\n\nNeeds the viewer role.",
+        "parameters": [
+          {
+            "name": "from",
+            "in": "query",
+            "required": false,
+            "description": "The first day, YYYY-MM-DD; 89 days before to when left out.",
+            "schema": {
+              "type": "string",
+              "format": "date",
+              "examples": [
+                "2026-10-01"
+              ]
+            }
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "required": false,
+            "description": "The last day; today when left out.",
+            "schema": {
+              "type": "string",
+              "format": "date",
+              "examples": [
+                "2026-10-01"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Report"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "403": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "422": {
+            "$ref": "#/components/responses/Problem"
+          }
+        },
+        "security": [
+          {
+            "session": []
+          },
+          {
+            "apiToken": []
+          },
+          {
+            "adminToken": []
+          }
+        ],
+        "x-openasy-role": "viewer"
+      }
+    },
+    "/api/v1/attribution": {
+      "get": {
+        "operationId": "attribution",
+        "tags": [
+          "Results"
+        ],
+        "summary": "Won deals and the first and last campaign that touched each",
+        "parameters": [
+          {
+            "name": "from",
+            "in": "query",
+            "required": false,
+            "description": "The first day, YYYY-MM-DD; 89 days before to when left out.",
+            "schema": {
+              "type": "string",
+              "format": "date",
+              "examples": [
+                "2026-10-01"
+              ]
+            }
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "required": false,
+            "description": "The last day; today when left out.",
+            "schema": {
+              "type": "string",
+              "format": "date",
+              "examples": [
+                "2026-10-01"
+              ]
+            }
+          },
+          {
+            "name": "campaign",
+            "in": "query",
+            "required": false,
+            "description": "Only deals this campaign touched first or last.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AttributionList"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "403": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "422": {
+            "$ref": "#/components/responses/Problem"
+          }
+        },
+        "security": [
+          {
+            "session": []
+          },
+          {
+            "apiToken": []
+          },
+          {
+            "adminToken": []
+          }
+        ],
+        "x-openasy-role": "viewer",
+        "description": "Needs the viewer role."
+      }
+    },
+    "/api/v1/sync": {
+      "post": {
+        "operationId": "sync",
+        "tags": [
+          "Results"
+        ],
+        "summary": "Read Analytics, Messages, CRM and Audience now",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SyncResult"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "403": {
+            "$ref": "#/components/responses/Problem"
+          }
+        },
+        "security": [
+          {
+            "session": []
+          },
+          {
+            "apiToken": []
+          },
+          {
+            "adminToken": []
+          }
+        ],
+        "x-openasy-role": "editor",
+        "description": "Needs the editor role."
+      }
+    },
+    "/api/v1/erasures": {
+      "post": {
+        "operationId": "erase",
+        "tags": [
+          "Contracts"
+        ],
+        "summary": "Delete a person on request, as Audience asks",
+        "description": "The won deals kept with one of the emails go. The same reference answers the same again.\n\nNeeds the admin role.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ErasureRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Deleted.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErasureAnswer"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "401": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "403": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "422": {
+            "$ref": "#/components/responses/Problem"
+          }
+        },
+        "security": [
+          {
+            "session": []
+          },
+          {
+            "apiToken": []
+          },
+          {
+            "adminToken": []
+          }
+        ],
+        "x-openasy-role": "admin"
+      }
+    },
+    "/healthz": {
+      "get": {
+        "operationId": "healthz",
+        "tags": [
+          "Product"
+        ],
+        "summary": "Alive",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Status"
+                }
+              }
+            }
+          }
+        },
+        "security": []
+      }
+    },
+    "/readyz": {
+      "get": {
+        "operationId": "readyz",
+        "tags": [
+          "Product"
+        ],
+        "summary": "Ready",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Status"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Not ready.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Status"
+                }
+              }
+            }
+          }
+        },
+        "security": []
+      }
+    },
+    "/metrics": {
+      "get": {
+        "operationId": "metrics",
+        "tags": [
+          "Product"
+        ],
+        "summary": "Prometheus metrics",
+        "responses": {
+          "200": {
+            "description": "Metrics.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "security": []
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "session": {
+        "type": "apiKey",
+        "in": "cookie",
+        "name": "openasy_session"
+      },
+      "apiToken": {
+        "type": "http",
+        "scheme": "bearer",
+        "description": "An API token made under Settings, API tokens."
+      },
+      "adminToken": {
+        "type": "http",
+        "scheme": "bearer",
+        "description": "Tests only."
+      }
+    },
+    "responses": {
+      "Problem": {
+        "description": "A problem (RFC 9457).",
+        "content": {
+          "application/problem+json": {
+            "schema": {
+              "$ref": "#/components/schemas/Problem"
+            }
+          }
+        }
+      }
+    },
+    "schemas": {
+      "Problem": {
+        "type": "object",
+        "required": [
+          "type",
+          "title",
+          "status",
+          "code"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "format": "uri"
+          },
+          "title": {
+            "type": "string"
+          },
+          "status": {
+            "type": "integer"
+          },
+          "code": {
+            "type": "string",
+            "description": "Stable; match on this.",
+            "enum": [
+              "invalid-token",
+              "invalid-json",
+              "invalid-body",
+              "forbidden",
+              "not-found",
+              "conflict",
+              "not-linked",
+              "not-available",
+              "link-failed",
+              "rate-limited",
+              "payload-too-large",
+              "internal-error",
+              "unauthenticated",
+              "invalid-credentials",
+              "mfa-required",
+              "mfa-setup-required",
+              "cross-site"
+            ]
+          },
+          "detail": {
+            "type": "string"
+          }
+        }
+      },
+      "Status": {
+        "type": "object",
+        "required": [
+          "status"
+        ],
+        "properties": {
+          "status": {
+            "type": "string"
+          }
+        }
+      },
+      "Version": {
+        "type": "object",
+        "required": [
+          "product",
+          "version"
+        ],
+        "properties": {
+          "product": {
+            "const": "campaigns"
+          },
+          "version": {
+            "type": "string"
+          }
+        }
+      },
+      "ProductList": {
+        "type": "object",
+        "required": [
+          "products"
+        ],
+        "properties": {
+          "products": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "id",
+                "url"
+              ],
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "url": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "Summary": {
+        "type": "object",
+        "required": [
+          "today",
+          "currency",
+          "campaigns",
+          "waitingForMe",
+          "startingSoon",
+          "myTasks",
+          "month",
+          "unmatchedSpend",
+          "linked",
+          "readAt",
+          "fileError"
+        ],
+        "properties": {
+          "today": {
+            "type": "string",
+            "format": "date",
+            "examples": [
+              "2026-10-01"
+            ]
+          },
+          "currency": {
+            "type": "string"
+          },
+          "campaigns": {
+            "type": "object",
+            "required": [
+              "planned",
+              "live",
+              "ended",
+              "cancelled"
+            ],
+            "properties": {
+              "planned": {
+                "type": "integer"
+              },
+              "live": {
+                "type": "integer"
+              },
+              "ended": {
+                "type": "integer"
+              },
+              "cancelled": {
+                "type": "integer"
+              }
+            }
+          },
+          "waitingForMe": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "id",
+                "name",
+                "start"
+              ],
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "start": {
+                  "type": "string",
+                  "format": "date",
+                  "examples": [
+                    "2026-10-01"
+                  ]
+                }
+              }
+            }
+          },
+          "startingSoon": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "id",
+                "name",
+                "start",
+                "canLaunch"
+              ],
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "start": {
+                  "type": "string",
+                  "format": "date",
+                  "examples": [
+                    "2026-10-01"
+                  ]
+                },
+                "canLaunch": {
+                  "type": "boolean"
+                }
+              }
+            }
+          },
+          "myTasks": {
+            "type": "object",
+            "required": [
+              "open",
+              "overdue"
+            ],
+            "properties": {
+              "open": {
+                "type": "integer"
+              },
+              "overdue": {
+                "type": "integer"
+              }
+            }
+          },
+          "month": {
+            "type": "object",
+            "required": [
+              "month",
+              "spend",
+              "budget"
+            ],
+            "properties": {
+              "month": {
+                "type": "string"
+              },
+              "spend": {
+                "type": "number"
+              },
+              "budget": {
+                "type": "number"
+              }
+            }
+          },
+          "unmatchedSpend": {
+            "type": "object",
+            "required": [
+              "rows",
+              "amount"
+            ],
+            "properties": {
+              "rows": {
+                "type": "integer"
+              },
+              "amount": {
+                "type": "number"
+              }
+            }
+          },
+          "linked": {
+            "type": "object",
+            "required": [
+              "analytics",
+              "messages",
+              "crm",
+              "audience",
+              "automation",
+              "google",
+              "meta"
+            ],
+            "properties": {
+              "analytics": {
+                "type": "boolean"
+              },
+              "messages": {
+                "type": "boolean"
+              },
+              "crm": {
+                "type": "boolean"
+              },
+              "audience": {
+                "type": "boolean"
+              },
+              "automation": {
+                "type": "boolean"
+              },
+              "google": {
+                "type": "boolean"
+              },
+              "meta": {
+                "type": "boolean"
+              }
+            }
+          },
+          "readAt": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "fileError": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        }
+      },
+      "Settings": {
+        "type": "object",
+        "required": [
+          "file",
+          "yaml",
+          "config"
+        ],
+        "properties": {
+          "file": {
+            "anyOf": [
+              {
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "yaml": {
+            "type": "string"
+          },
+          "config": {
+            "anyOf": [
+              {
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        }
+      },
+      "Team": {
+        "type": "object",
+        "required": [
+          "members"
+        ],
+        "properties": {
+          "members": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "id",
+                "name",
+                "email"
+              ],
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "email": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "Integrations": {
+        "type": "object",
+        "required": [
+          "analytics",
+          "messages",
+          "crm",
+          "audience",
+          "automation",
+          "google",
+          "meta"
+        ],
+        "properties": {
+          "analytics": {
+            "type": "object",
+            "required": [
+              "linked",
+              "url",
+              "tokenSet",
+              "lastOkAt",
+              "lastError",
+              "lastTriedAt"
+            ],
+            "properties": {
+              "linked": {
+                "type": "boolean"
+              },
+              "url": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "tokenSet": {
+                "type": "boolean"
+              },
+              "lastOkAt": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "lastError": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "lastTriedAt": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "site": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              }
+            }
+          },
+          "messages": {
+            "type": "object",
+            "required": [
+              "linked",
+              "url",
+              "tokenSet",
+              "lastOkAt",
+              "lastError",
+              "lastTriedAt"
+            ],
+            "properties": {
+              "linked": {
+                "type": "boolean"
+              },
+              "url": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "tokenSet": {
+                "type": "boolean"
+              },
+              "lastOkAt": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "lastError": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "lastTriedAt": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              }
+            }
+          },
+          "crm": {
+            "type": "object",
+            "required": [
+              "linked",
+              "url",
+              "tokenSet",
+              "lastOkAt",
+              "lastError",
+              "lastTriedAt"
+            ],
+            "properties": {
+              "linked": {
+                "type": "boolean"
+              },
+              "url": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "tokenSet": {
+                "type": "boolean"
+              },
+              "lastOkAt": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "lastError": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "lastTriedAt": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "pipeline": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              }
+            }
+          },
+          "audience": {
+            "type": "object",
+            "required": [
+              "linked",
+              "url",
+              "tokenSet",
+              "lastOkAt",
+              "lastError",
+              "lastTriedAt"
+            ],
+            "properties": {
+              "linked": {
+                "type": "boolean"
+              },
+              "url": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "tokenSet": {
+                "type": "boolean"
+              },
+              "lastOkAt": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "lastError": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "lastTriedAt": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              }
+            }
+          },
+          "automation": {
+            "type": "object",
+            "required": [
+              "linked",
+              "url",
+              "tokenSet",
+              "lastOkAt",
+              "lastError",
+              "lastTriedAt"
+            ],
+            "properties": {
+              "linked": {
+                "type": "boolean"
+              },
+              "url": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "tokenSet": {
+                "type": "boolean"
+              },
+              "lastOkAt": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "lastError": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "lastTriedAt": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "playbook": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              }
+            }
+          },
+          "google": {
+            "type": "object",
+            "required": [
+              "linked",
+              "url",
+              "tokenSet",
+              "lastOkAt",
+              "lastError",
+              "lastTriedAt"
+            ],
+            "properties": {
+              "linked": {
+                "type": "boolean"
+              },
+              "url": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "tokenSet": {
+                "type": "boolean"
+              },
+              "lastOkAt": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "lastError": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "lastTriedAt": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              }
+            }
+          },
+          "meta": {
+            "type": "object",
+            "required": [
+              "linked",
+              "url",
+              "tokenSet",
+              "lastOkAt",
+              "lastError",
+              "lastTriedAt"
+            ],
+            "properties": {
+              "linked": {
+                "type": "boolean"
+              },
+              "url": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "tokenSet": {
+                "type": "boolean"
+              },
+              "lastOkAt": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "lastError": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "lastTriedAt": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              }
+            }
+          }
+        }
+      },
+      "Naming": {
+        "type": "object",
+        "required": [
+          "utm",
+          "problem",
+          "taken",
+          "rule"
+        ],
+        "properties": {
+          "utm": {
+            "type": "string"
+          },
+          "problem": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "taken": {
+            "anyOf": [
+              {
+                "type": "object",
+                "required": [
+                  "id",
+                  "name"
+                ],
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "name": {
+                    "type": "string"
+                  }
+                }
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "rule": {
+            "type": "string"
+          }
+        }
+      },
+      "Campaign": {
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "utm",
+          "status",
+          "start",
+          "end",
+          "brief",
+          "message",
+          "audience",
+          "owner",
+          "currency",
+          "budget",
+          "spend",
+          "channels",
+          "goals",
+          "approvals",
+          "approved",
+          "myApproval",
+          "canLaunch",
+          "blockers",
+          "adNames",
+          "messagesIds",
+          "counts",
+          "launchedAt",
+          "endedAt",
+          "createdAt",
+          "createdBy",
+          "updatedAt"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "utm": {
+            "type": "string",
+            "description": "Its utm_campaign, made by the file's naming rules; fixed once it has links or is live."
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "planned",
+              "live",
+              "ended",
+              "cancelled"
+            ]
+          },
+          "start": {
+            "type": "string",
+            "format": "date",
+            "examples": [
+              "2026-10-01"
+            ]
+          },
+          "end": {
+            "type": "string",
+            "format": "date",
+            "examples": [
+              "2026-10-01"
+            ]
+          },
+          "brief": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "message": {
+            "anyOf": [
+              {
+                "type": "string",
+                "description": "The one thing it says."
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "audience": {
+            "anyOf": [
+              {
+                "type": "string",
+                "description": "Who it is for, in words."
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "owner": {
+            "anyOf": [
+              {
+                "type": "object",
+                "required": [
+                  "id",
+                  "name"
+                ],
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "name": {
+                    "type": "string"
+                  }
+                }
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "currency": {
+            "type": "string"
+          },
+          "budget": {
+            "type": "number"
+          },
+          "spend": {
+            "type": "number",
+            "description": "Everything spent: entered, imported from CSV and read from the ad platforms."
+          },
+          "channels": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "id",
+                "name",
+                "inFile",
+                "budget",
+                "spend"
+              ],
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "inFile": {
+                  "type": "boolean"
+                },
+                "budget": {
+                  "type": "number"
+                },
+                "spend": {
+                  "type": "number"
+                }
+              }
+            }
+          },
+          "goals": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "id",
+                "metric",
+                "goal",
+                "target"
+              ],
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "metric": {
+                  "type": "string",
+                  "enum": [
+                    "visits",
+                    "conversions",
+                    "sends",
+                    "opens",
+                    "clicks",
+                    "deals",
+                    "revenue"
+                  ]
+                },
+                "goal": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "description": "The Analytics goal conversions count, by name."
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "target": {
+                  "type": "number"
+                }
+              }
+            }
+          },
+          "approvals": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "email",
+                "name",
+                "state",
+                "note",
+                "decidedAt"
+              ],
+              "properties": {
+                "email": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "state": {
+                  "type": "string",
+                  "enum": [
+                    "waiting",
+                    "approved",
+                    "changes"
+                  ],
+                  "description": "changes: the approver asked for changes, with a note."
+                },
+                "note": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "decidedAt": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "approved": {
+            "type": "boolean",
+            "description": "Every approver approved, or it names none."
+          },
+          "myApproval": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "waiting",
+                  "approved",
+                  "changes"
+                ],
+                "description": "The caller's own decision, when the campaign names them."
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "canLaunch": {
+            "type": "boolean"
+          },
+          "blockers": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Why it cannot be marked live yet."
+          },
+          "adNames": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Ad platform campaigns, by name or id, whose spend is this campaign's beyond those whose name carries utm."
+          },
+          "messagesIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Messages campaigns, by id, whose sends count here beyond those whose slug is utm."
+          },
+          "counts": {
+            "type": "object",
+            "required": [
+              "links",
+              "tasks",
+              "tasksDone",
+              "assets"
+            ],
+            "properties": {
+              "links": {
+                "type": "integer"
+              },
+              "tasks": {
+                "type": "integer"
+              },
+              "tasksDone": {
+                "type": "integer"
+              },
+              "assets": {
+                "type": "integer"
+              }
+            }
+          },
+          "launchedAt": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "endedAt": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "createdBy": {
+            "type": "string"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "CampaignList": {
+        "type": "object",
+        "required": [
+          "campaigns"
+        ],
+        "properties": {
+          "campaigns": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Campaign"
+            }
+          }
+        }
+      },
+      "CampaignDetail": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/Campaign"
+          },
+          {
+            "type": "object",
+            "required": [
+              "links",
+              "tasks",
+              "assets",
+              "activity"
+            ],
+            "properties": {
+              "links": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/Link"
+                }
+              },
+              "tasks": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/Task"
+                }
+              },
+              "assets": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/Asset"
+                }
+              },
+              "activity": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "at",
+                    "by",
+                    "text"
+                  ],
+                  "properties": {
+                    "at": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "by": {
+                      "type": "string"
+                    },
+                    "text": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ]
+      },
+      "CampaignInput": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "utm": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Leave out to make it by the naming rules."
+          },
+          "start": {
+            "type": "string",
+            "format": "date",
+            "examples": [
+              "2026-10-01"
+            ]
+          },
+          "end": {
+            "type": "string",
+            "format": "date",
+            "examples": [
+              "2026-10-01"
+            ]
+          },
+          "brief": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "message": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "audience": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "owner": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "A member's id or email; the caller when left out on create."
+          },
+          "budget": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "The whole budget; the channels' budgets added up when left out on create."
+          },
+          "channels": {
+            "type": "array",
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "object",
+                  "required": [
+                    "id"
+                  ],
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "budget": {
+                      "type": "number"
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "goals": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "metric",
+                "target"
+              ],
+              "properties": {
+                "metric": {
+                  "type": "string",
+                  "enum": [
+                    "visits",
+                    "conversions",
+                    "sends",
+                    "opens",
+                    "clicks",
+                    "deals",
+                    "revenue"
+                  ]
+                },
+                "target": {
+                  "type": "number"
+                },
+                "goal": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "approvers": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Members by email or id; approvals.approvers of the file when left out on create."
+          },
+          "adNames": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "messagesIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "Decision": {
+        "type": "object",
+        "required": [
+          "decision"
+        ],
+        "properties": {
+          "decision": {
+            "type": "string",
+            "enum": [
+              "approved",
+              "changes"
+            ]
+          },
+          "note": {
+            "anyOf": [
+              {
+                "type": "string",
+                "description": "Needed with changes."
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        }
+      },
+      "Launched": {
+        "type": "object",
+        "required": [
+          "campaign",
+          "automation"
+        ],
+        "properties": {
+          "campaign": {
+            "$ref": "#/components/schemas/CampaignDetail"
+          },
+          "automation": {
+            "type": "object",
+            "required": [
+              "sent",
+              "started",
+              "error"
+            ],
+            "properties": {
+              "sent": {
+                "type": "boolean"
+              },
+              "started": {
+                "type": "boolean",
+                "description": "The playbook's conditions held and a run started."
+              },
+              "error": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              }
+            }
+          }
+        }
+      },
+      "Link": {
+        "type": "object",
+        "required": [
+          "id",
+          "campaign",
+          "channel",
+          "channelName",
+          "destination",
+          "source",
+          "medium",
+          "content",
+          "term",
+          "url",
+          "label",
+          "qr",
+          "visits",
+          "createdAt",
+          "createdBy"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "campaign": {
+            "type": "string"
+          },
+          "channel": {
+            "type": "string"
+          },
+          "channelName": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "destination": {
+            "type": "string"
+          },
+          "source": {
+            "type": "string"
+          },
+          "medium": {
+            "type": "string"
+          },
+          "content": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "term": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "url": {
+            "type": "string",
+            "description": "The destination with utm_source, utm_medium, utm_campaign and, when set, utm_content and utm_term."
+          },
+          "label": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "qr": {
+            "type": "string",
+            "description": "The address of its QR code, SVG or ?format=png."
+          },
+          "visits": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "description": "Visits Analytics counted with its utm_source, utm_medium and utm_campaign at the last read; links that differ only in utm_content share them."
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "createdBy": {
+            "type": "string"
+          }
+        }
+      },
+      "LinkList": {
+        "type": "object",
+        "required": [
+          "links"
+        ],
+        "properties": {
+          "links": {
+            "type": "array",
+            "items": {
+              "allOf": [
+                {
+                  "$ref": "#/components/schemas/Link"
+                },
+                {
+                  "type": "object",
+                  "required": [
+                    "campaignName"
+                  ],
+                  "properties": {
+                    "campaignName": {
+                      "type": "string"
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      },
+      "LinkInput": {
+        "type": "object",
+        "required": [
+          "destination",
+          "channel"
+        ],
+        "properties": {
+          "destination": {
+            "type": "string"
+          },
+          "channel": {
+            "type": "string"
+          },
+          "source": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "One the channel allows; its first when left out."
+          },
+          "content": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "term": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "label": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        }
+      },
+      "Task": {
+        "type": "object",
+        "required": [
+          "id",
+          "campaign",
+          "text",
+          "channel",
+          "owner",
+          "due",
+          "overdue",
+          "doneAt",
+          "doneBy",
+          "createdAt"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "campaign": {
+            "type": "object",
+            "required": [
+              "id",
+              "name"
+            ],
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              }
+            }
+          },
+          "text": {
+            "type": "string"
+          },
+          "channel": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "owner": {
+            "anyOf": [
+              {
+                "type": "object",
+                "required": [
+                  "id",
+                  "name"
+                ],
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "name": {
+                    "type": "string"
+                  }
+                }
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "due": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date",
+                "examples": [
+                  "2026-10-01"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "overdue": {
+            "type": "boolean"
+          },
+          "doneAt": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "doneBy": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "TaskList": {
+        "type": "object",
+        "required": [
+          "tasks"
+        ],
+        "properties": {
+          "tasks": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Task"
+            }
+          }
+        }
+      },
+      "TaskInput": {
+        "type": "object",
+        "properties": {
+          "text": {
+            "type": "string"
+          },
+          "owner": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "due": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date",
+                "examples": [
+                  "2026-10-01"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "channel": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "done": {
+            "type": "boolean"
+          }
+        }
+      },
+      "Asset": {
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "url",
+          "channel",
+          "createdAt",
+          "createdBy"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          },
+          "channel": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "createdBy": {
+            "type": "string"
+          }
+        }
+      },
+      "AssetInput": {
+        "type": "object",
+        "required": [
+          "name",
+          "url"
+        ],
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          },
+          "channel": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        }
+      },
+      "Spend": {
+        "type": "object",
+        "required": [
+          "id",
+          "campaign",
+          "channel",
+          "channelName",
+          "day",
+          "amount",
+          "source",
+          "adCampaign",
+          "adCampaignId",
+          "clicks",
+          "impressions",
+          "note",
+          "createdAt",
+          "createdBy"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "campaign": {
+            "anyOf": [
+              {
+                "type": "object",
+                "required": [
+                  "id",
+                  "name",
+                  "utm"
+                ],
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "utm": {
+                    "type": "string"
+                  }
+                }
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "channel": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "channelName": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "day": {
+            "type": "string",
+            "format": "date",
+            "examples": [
+              "2026-10-01"
+            ]
+          },
+          "amount": {
+            "type": "number"
+          },
+          "source": {
+            "type": "string",
+            "enum": [
+              "manual",
+              "csv",
+              "google",
+              "meta"
+            ]
+          },
+          "adCampaign": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "adCampaignId": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "clicks": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "impressions": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "note": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "createdBy": {
+            "type": "string"
+          }
+        }
+      },
+      "SpendList": {
+        "type": "object",
+        "required": [
+          "spend",
+          "unmatched",
+          "currency"
+        ],
+        "properties": {
+          "spend": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Spend"
+            }
+          },
+          "unmatched": {
+            "type": "object",
+            "required": [
+              "rows",
+              "amount"
+            ],
+            "properties": {
+              "rows": {
+                "type": "integer"
+              },
+              "amount": {
+                "type": "number"
+              }
+            }
+          },
+          "currency": {
+            "type": "string"
+          }
+        }
+      },
+      "SpendInput": {
+        "type": "object",
+        "required": [
+          "campaign",
+          "channel",
+          "day",
+          "amount"
+        ],
+        "properties": {
+          "campaign": {
+            "type": "string"
+          },
+          "channel": {
+            "type": "string"
+          },
+          "day": {
+            "type": "string",
+            "format": "date",
+            "examples": [
+              "2026-10-01"
+            ]
+          },
+          "amount": {
+            "type": "number"
+          },
+          "note": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        }
+      },
+      "SpendAssign": {
+        "type": "object",
+        "required": [
+          "campaign"
+        ],
+        "properties": {
+          "campaign": {
+            "type": "string"
+          }
+        }
+      },
+      "SpendImport": {
+        "type": "object",
+        "required": [
+          "csv"
+        ],
+        "properties": {
+          "csv": {
+            "type": "string",
+            "description": "day, campaign, channel, amount and note; comma or semicolon separated."
+          },
+          "check": {
+            "type": "boolean"
+          }
+        }
+      },
+      "SpendImported": {
+        "type": "object",
+        "required": [
+          "check",
+          "rows",
+          "valid",
+          "added",
+          "replaced",
+          "errors"
+        ],
+        "properties": {
+          "check": {
+            "type": "boolean"
+          },
+          "rows": {
+            "type": "integer"
+          },
+          "valid": {
+            "type": "integer"
+          },
+          "added": {
+            "type": "integer"
+          },
+          "replaced": {
+            "type": "integer"
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "line",
+                "error"
+              ],
+              "properties": {
+                "line": {
+                  "type": "integer"
+                },
+                "error": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "AdsRead": {
+        "type": "object",
+        "required": [
+          "from",
+          "to",
+          "platforms"
+        ],
+        "properties": {
+          "from": {
+            "type": "string",
+            "format": "date",
+            "examples": [
+              "2026-10-01"
+            ]
+          },
+          "to": {
+            "type": "string",
+            "format": "date",
+            "examples": [
+              "2026-10-01"
+            ]
+          },
+          "platforms": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "platform",
+                "rows",
+                "matched",
+                "unmatched",
+                "otherCurrency",
+                "error"
+              ],
+              "properties": {
+                "platform": {
+                  "type": "string",
+                  "enum": [
+                    "google",
+                    "meta"
+                  ]
+                },
+                "rows": {
+                  "type": "integer"
+                },
+                "matched": {
+                  "type": "integer"
+                },
+                "unmatched": {
+                  "type": "integer"
+                },
+                "otherCurrency": {
+                  "type": "integer"
+                },
+                "error": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      },
+      "Deal": {
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "value",
+          "currency",
+          "counted",
+          "wonAt",
+          "company",
+          "url",
+          "first",
+          "last",
+          "touches"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "value": {
+            "type": "number",
+            "description": "In the deal's currency, without KDV."
+          },
+          "currency": {
+            "type": "string"
+          },
+          "counted": {
+            "type": "boolean",
+            "description": "In the file's currency, so counted in deals and revenue."
+          },
+          "wonAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "company": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "first": {
+            "anyOf": [
+              {
+                "type": "object",
+                "required": [
+                  "campaign",
+                  "channel",
+                  "channelName",
+                  "at",
+                  "via"
+                ],
+                "properties": {
+                  "campaign": {
+                    "type": "object",
+                    "required": [
+                      "id",
+                      "name",
+                      "utm"
+                    ],
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "name": {
+                        "type": "string"
+                      },
+                      "utm": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "channel": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "channelName": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "at": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "via": {
+                    "type": "string",
+                    "enum": [
+                      "visit",
+                      "message",
+                      "crm"
+                    ],
+                    "description": "A tagged visit, a click in a message, or the lead's own source in CRM."
+                  }
+                }
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "last": {
+            "anyOf": [
+              {
+                "type": "object",
+                "required": [
+                  "campaign",
+                  "channel",
+                  "channelName",
+                  "at",
+                  "via"
+                ],
+                "properties": {
+                  "campaign": {
+                    "type": "object",
+                    "required": [
+                      "id",
+                      "name",
+                      "utm"
+                    ],
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "name": {
+                        "type": "string"
+                      },
+                      "utm": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "channel": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "channelName": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "at": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "via": {
+                    "type": "string",
+                    "enum": [
+                      "visit",
+                      "message",
+                      "crm"
+                    ],
+                    "description": "A tagged visit, a click in a message, or the lead's own source in CRM."
+                  }
+                }
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "touches": {
+            "type": "integer",
+            "description": "Touches that name one of the campaigns."
+          }
+        }
+      },
+      "Results": {
+        "type": "object",
+        "required": [
+          "campaign",
+          "currency",
+          "readAt",
+          "frozen",
+          "window",
+          "errors",
+          "linked",
+          "totals",
+          "channels",
+          "goals",
+          "analyticsGoals",
+          "series",
+          "sources",
+          "messages",
+          "deals"
+        ],
+        "properties": {
+          "campaign": {
+            "type": "object",
+            "required": [
+              "id",
+              "name",
+              "utm",
+              "status",
+              "start",
+              "end"
+            ],
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "utm": {
+                "type": "string"
+              },
+              "status": {
+                "type": "string",
+                "enum": [
+                  "planned",
+                  "live",
+                  "ended",
+                  "cancelled"
+                ]
+              },
+              "start": {
+                "type": "string",
+                "format": "date",
+                "examples": [
+                  "2026-10-01"
+                ]
+              },
+              "end": {
+                "type": "string",
+                "format": "date",
+                "examples": [
+                  "2026-10-01"
+                ]
+              }
+            }
+          },
+          "currency": {
+            "type": "string"
+          },
+          "readAt": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "frozen": {
+            "type": "boolean",
+            "description": "Ended more than results.settle days ago: what was read last stays."
+          },
+          "window": {
+            "anyOf": [
+              {
+                "type": "object",
+                "required": [
+                  "days",
+                  "from",
+                  "to",
+                  "partial"
+                ],
+                "properties": {
+                  "days": {
+                    "type": "integer",
+                    "enum": [
+                      1,
+                      7,
+                      30,
+                      90
+                    ]
+                  },
+                  "from": {
+                    "type": "string"
+                  },
+                  "to": {
+                    "type": "string"
+                  },
+                  "partial": {
+                    "type": "boolean",
+                    "description": "The campaign is longer than Analytics' 90 days: its visits are of the last 90."
+                  }
+                }
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "errors": {
+            "type": "object",
+            "required": [
+              "analytics",
+              "messages"
+            ],
+            "properties": {
+              "analytics": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "messages": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              }
+            }
+          },
+          "linked": {
+            "type": "object",
+            "required": [
+              "analytics",
+              "messages",
+              "crm",
+              "audience"
+            ],
+            "properties": {
+              "analytics": {
+                "type": "boolean"
+              },
+              "messages": {
+                "type": "boolean"
+              },
+              "crm": {
+                "type": "boolean"
+              },
+              "audience": {
+                "type": "boolean"
+              }
+            }
+          },
+          "totals": {
+            "type": "object",
+            "required": [
+              "budget",
+              "spend",
+              "visits",
+              "visitors",
+              "engagedVisits",
+              "sent",
+              "delivered",
+              "opened",
+              "clicked",
+              "first",
+              "last",
+              "costPerVisit"
+            ],
+            "properties": {
+              "budget": {
+                "type": "number"
+              },
+              "spend": {
+                "type": "number"
+              },
+              "visits": {
+                "type": "integer"
+              },
+              "visitors": {
+                "type": "integer"
+              },
+              "engagedVisits": {
+                "type": "integer"
+              },
+              "sent": {
+                "type": "integer"
+              },
+              "delivered": {
+                "type": "integer"
+              },
+              "opened": {
+                "type": "integer"
+              },
+              "clicked": {
+                "type": "integer"
+              },
+              "first": {
+                "type": "object",
+                "required": [
+                  "deals",
+                  "revenue",
+                  "roi"
+                ],
+                "properties": {
+                  "deals": {
+                    "type": "integer"
+                  },
+                  "revenue": {
+                    "type": "number"
+                  },
+                  "roi": {
+                    "anyOf": [
+                      {
+                        "type": "number",
+                        "description": "(revenue - spend) / spend; null without spend."
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  }
+                }
+              },
+              "last": {
+                "type": "object",
+                "required": [
+                  "deals",
+                  "revenue",
+                  "roi"
+                ],
+                "properties": {
+                  "deals": {
+                    "type": "integer"
+                  },
+                  "revenue": {
+                    "type": "number"
+                  },
+                  "roi": {
+                    "anyOf": [
+                      {
+                        "type": "number",
+                        "description": "(revenue - spend) / spend; null without spend."
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  }
+                }
+              },
+              "costPerVisit": {
+                "anyOf": [
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              }
+            }
+          },
+          "channels": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "id",
+                "name",
+                "planned",
+                "budget",
+                "spend",
+                "visits",
+                "visitors",
+                "sent",
+                "opened",
+                "clicked",
+                "first",
+                "last"
+              ],
+              "properties": {
+                "id": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "description": "null for what has no channel: visits without utm_medium, a CRM lead's source."
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "name": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "planned": {
+                  "type": "boolean"
+                },
+                "budget": {
+                  "type": "number"
+                },
+                "spend": {
+                  "type": "number"
+                },
+                "visits": {
+                  "type": "integer"
+                },
+                "visitors": {
+                  "type": "integer"
+                },
+                "sent": {
+                  "type": "integer"
+                },
+                "opened": {
+                  "type": "integer"
+                },
+                "clicked": {
+                  "type": "integer"
+                },
+                "first": {
+                  "type": "object",
+                  "required": [
+                    "deals",
+                    "revenue"
+                  ],
+                  "properties": {
+                    "deals": {
+                      "type": "integer"
+                    },
+                    "revenue": {
+                      "type": "number"
+                    }
+                  }
+                },
+                "last": {
+                  "type": "object",
+                  "required": [
+                    "deals",
+                    "revenue"
+                  ],
+                  "properties": {
+                    "deals": {
+                      "type": "integer"
+                    },
+                    "revenue": {
+                      "type": "number"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "goals": {
+            "type": "array",
+            "items": {
+              "allOf": [
+                {
+                  "type": "object",
+                  "required": [
+                    "id",
+                    "metric",
+                    "goal",
+                    "target"
+                  ],
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "metric": {
+                      "type": "string",
+                      "enum": [
+                        "visits",
+                        "conversions",
+                        "sends",
+                        "opens",
+                        "clicks",
+                        "deals",
+                        "revenue"
+                      ]
+                    },
+                    "goal": {
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "description": "The Analytics goal conversions count, by name."
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "target": {
+                      "type": "number"
+                    }
+                  }
+                },
+                {
+                  "type": "object",
+                  "required": [
+                    "actual",
+                    "actualFirst",
+                    "share"
+                  ],
+                  "properties": {
+                    "actual": {
+                      "anyOf": [
+                        {
+                          "type": "number",
+                          "description": "Deals and revenue by last touch."
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "actualFirst": {
+                      "anyOf": [
+                        {
+                          "type": "number",
+                          "description": "Deals and revenue by first touch."
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "share": {
+                      "anyOf": [
+                        {
+                          "type": "number"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "analyticsGoals": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "name",
+                "visits"
+              ],
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "visits": {
+                  "type": "integer"
+                }
+              }
+            }
+          },
+          "series": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "day",
+                "visits"
+              ],
+              "properties": {
+                "day": {
+                  "type": "string"
+                },
+                "visits": {
+                  "type": "integer"
+                }
+              }
+            },
+            "description": "Visits a day over the window, from Analytics."
+          },
+          "sources": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "source",
+                "medium",
+                "campaign",
+                "visits",
+                "visitors"
+              ],
+              "properties": {
+                "source": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "medium": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "campaign": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "visits": {
+                  "type": "integer"
+                },
+                "visitors": {
+                  "type": "integer"
+                }
+              }
+            }
+          },
+          "messages": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "id",
+                "name",
+                "slug",
+                "channel",
+                "channelName",
+                "state",
+                "startedAt",
+                "sent",
+                "delivered",
+                "opened",
+                "clicked",
+                "bounced",
+                "unsubscribed"
+              ],
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "slug": {
+                  "type": "string"
+                },
+                "channel": {
+                  "type": "string",
+                  "enum": [
+                    "email",
+                    "sms",
+                    "whatsapp"
+                  ]
+                },
+                "channelName": {
+                  "type": "string"
+                },
+                "state": {
+                  "type": "string"
+                },
+                "startedAt": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "sent": {
+                  "type": "integer"
+                },
+                "delivered": {
+                  "type": "integer"
+                },
+                "opened": {
+                  "type": "integer"
+                },
+                "clicked": {
+                  "type": "integer"
+                },
+                "bounced": {
+                  "type": "integer"
+                },
+                "unsubscribed": {
+                  "type": "integer"
+                }
+              }
+            }
+          },
+          "deals": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Deal"
+            }
+          }
+        }
+      },
+      "Report": {
+        "type": "object",
+        "required": [
+          "from",
+          "to",
+          "currency",
+          "readAt",
+          "campaigns",
+          "channels",
+          "totals",
+          "wonInPeriod",
+          "notAttributed"
+        ],
+        "properties": {
+          "from": {
+            "type": "string",
+            "format": "date",
+            "examples": [
+              "2026-10-01"
+            ]
+          },
+          "to": {
+            "type": "string",
+            "format": "date",
+            "examples": [
+              "2026-10-01"
+            ]
+          },
+          "currency": {
+            "type": "string"
+          },
+          "readAt": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "campaigns": {
+            "type": "array",
+            "items": {
+              "allOf": [
+                {
+                  "type": "object",
+                  "required": [
+                    "id",
+                    "name",
+                    "utm",
+                    "status",
+                    "start",
+                    "end",
+                    "readAt"
+                  ],
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "utm": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "string",
+                      "enum": [
+                        "planned",
+                        "live",
+                        "ended",
+                        "cancelled"
+                      ]
+                    },
+                    "start": {
+                      "type": "string",
+                      "format": "date",
+                      "examples": [
+                        "2026-10-01"
+                      ]
+                    },
+                    "end": {
+                      "type": "string",
+                      "format": "date",
+                      "examples": [
+                        "2026-10-01"
+                      ]
+                    },
+                    "readAt": {
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "format": "date-time"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "object",
+                  "required": [
+                    "budget",
+                    "spend",
+                    "visits",
+                    "visitors",
+                    "engagedVisits",
+                    "sent",
+                    "delivered",
+                    "opened",
+                    "clicked",
+                    "first",
+                    "last",
+                    "costPerVisit"
+                  ],
+                  "properties": {
+                    "budget": {
+                      "type": "number"
+                    },
+                    "spend": {
+                      "type": "number"
+                    },
+                    "visits": {
+                      "type": "integer"
+                    },
+                    "visitors": {
+                      "type": "integer"
+                    },
+                    "engagedVisits": {
+                      "type": "integer"
+                    },
+                    "sent": {
+                      "type": "integer"
+                    },
+                    "delivered": {
+                      "type": "integer"
+                    },
+                    "opened": {
+                      "type": "integer"
+                    },
+                    "clicked": {
+                      "type": "integer"
+                    },
+                    "first": {
+                      "type": "object",
+                      "required": [
+                        "deals",
+                        "revenue",
+                        "roi"
+                      ],
+                      "properties": {
+                        "deals": {
+                          "type": "integer"
+                        },
+                        "revenue": {
+                          "type": "number"
+                        },
+                        "roi": {
+                          "anyOf": [
+                            {
+                              "type": "number",
+                              "description": "(revenue - spend) / spend; null without spend."
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    "last": {
+                      "type": "object",
+                      "required": [
+                        "deals",
+                        "revenue",
+                        "roi"
+                      ],
+                      "properties": {
+                        "deals": {
+                          "type": "integer"
+                        },
+                        "revenue": {
+                          "type": "number"
+                        },
+                        "roi": {
+                          "anyOf": [
+                            {
+                              "type": "number",
+                              "description": "(revenue - spend) / spend; null without spend."
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    "costPerVisit": {
+                      "anyOf": [
+                        {
+                          "type": "number"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "channels": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "id",
+                "name",
+                "campaigns",
+                "budget",
+                "spend",
+                "visits",
+                "sent",
+                "opened",
+                "clicked",
+                "first",
+                "last"
+              ],
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "campaigns": {
+                  "type": "integer"
+                },
+                "budget": {
+                  "type": "number"
+                },
+                "spend": {
+                  "type": "number"
+                },
+                "visits": {
+                  "type": "integer"
+                },
+                "sent": {
+                  "type": "integer"
+                },
+                "opened": {
+                  "type": "integer"
+                },
+                "clicked": {
+                  "type": "integer"
+                },
+                "first": {
+                  "type": "object",
+                  "required": [
+                    "deals",
+                    "revenue",
+                    "roi"
+                  ],
+                  "properties": {
+                    "deals": {
+                      "type": "integer"
+                    },
+                    "revenue": {
+                      "type": "number"
+                    },
+                    "roi": {
+                      "anyOf": [
+                        {
+                          "type": "number",
+                          "description": "(revenue - spend) / spend; null without spend."
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    }
+                  }
+                },
+                "last": {
+                  "type": "object",
+                  "required": [
+                    "deals",
+                    "revenue",
+                    "roi"
+                  ],
+                  "properties": {
+                    "deals": {
+                      "type": "integer"
+                    },
+                    "revenue": {
+                      "type": "number"
+                    },
+                    "roi": {
+                      "anyOf": [
+                        {
+                          "type": "number",
+                          "description": "(revenue - spend) / spend; null without spend."
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "totals": {
+            "type": "object",
+            "required": [
+              "budget",
+              "spend",
+              "visits",
+              "sent",
+              "first",
+              "last"
+            ],
+            "properties": {
+              "budget": {
+                "type": "number"
+              },
+              "spend": {
+                "type": "number"
+              },
+              "visits": {
+                "type": "integer"
+              },
+              "sent": {
+                "type": "integer"
+              },
+              "first": {
+                "type": "object",
+                "required": [
+                  "deals",
+                  "revenue",
+                  "roi"
+                ],
+                "properties": {
+                  "deals": {
+                    "type": "integer"
+                  },
+                  "revenue": {
+                    "type": "number"
+                  },
+                  "roi": {
+                    "anyOf": [
+                      {
+                        "type": "number",
+                        "description": "(revenue - spend) / spend; null without spend."
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  }
+                }
+              },
+              "last": {
+                "type": "object",
+                "required": [
+                  "deals",
+                  "revenue",
+                  "roi"
+                ],
+                "properties": {
+                  "deals": {
+                    "type": "integer"
+                  },
+                  "revenue": {
+                    "type": "number"
+                  },
+                  "roi": {
+                    "anyOf": [
+                      {
+                        "type": "number",
+                        "description": "(revenue - spend) / spend; null without spend."
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "wonInPeriod": {
+            "type": "object",
+            "required": [
+              "deals",
+              "revenue"
+            ],
+            "properties": {
+              "deals": {
+                "type": "integer"
+              },
+              "revenue": {
+                "type": "number"
+              }
+            }
+          },
+          "notAttributed": {
+            "type": "object",
+            "required": [
+              "deals",
+              "revenue"
+            ],
+            "properties": {
+              "deals": {
+                "type": "integer"
+              },
+              "revenue": {
+                "type": "number"
+              }
+            },
+            "description": "Deals won in the period that no campaign touched."
+          }
+        }
+      },
+      "AttributionList": {
+        "type": "object",
+        "required": [
+          "from",
+          "to",
+          "currency",
+          "windowDays",
+          "deals"
+        ],
+        "properties": {
+          "from": {
+            "type": "string",
+            "format": "date",
+            "examples": [
+              "2026-10-01"
+            ]
+          },
+          "to": {
+            "type": "string",
+            "format": "date",
+            "examples": [
+              "2026-10-01"
+            ]
+          },
+          "currency": {
+            "type": "string"
+          },
+          "windowDays": {
+            "type": "integer"
+          },
+          "deals": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Deal"
+            }
+          }
+        }
+      },
+      "SyncResult": {
+        "type": "object",
+        "required": [
+          "readAt",
+          "campaigns",
+          "deals",
+          "touchesRead",
+          "errors"
+        ],
+        "properties": {
+          "readAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "campaigns": {
+            "type": "integer"
+          },
+          "deals": {
+            "type": "integer"
+          },
+          "touchesRead": {
+            "type": "integer"
+          },
+          "errors": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "ErasureRequest": {
+        "type": "object",
+        "required": [
+          "reference",
+          "people"
+        ],
+        "properties": {
+          "reference": {
+            "type": "string"
+          },
+          "product": {
+            "type": "string"
+          },
+          "people": {
+            "type": "object",
+            "required": [],
+            "properties": {
+              "emails": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "phones": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "userIds": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "ErasureAnswer": {
+        "type": "object",
+        "required": [
+          "status",
+          "deleted"
+        ],
+        "properties": {
+          "status": {
+            "const": "done"
+          },
+          "deleted": {
+            "type": "integer"
+          }
+        }
+      }
+    }
+  }
+}

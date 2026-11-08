@@ -1,0 +1,133 @@
+/* The few layouts this product needs that @openasy/ui's prebuilt styles do not include. Colours stay in the library's tokens. */
+
+.cmp-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+fieldset.border-0 {
+  padding: 0;
+  margin: 0;
+}
+
+.cmp-halves,
+.cmp-side,
+.cmp-form2 {
+  grid-template-columns: minmax(0, 1fr);
+}
+@media (min-width: 640px) {
+  .cmp-form2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (min-width: 1280px) {
+  .cmp-halves {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+  .cmp-side {
+    grid-template-columns: minmax(0, 1fr) 340px;
+  }
+}
+
+/* The calendar: names on the left, a lane of six months on the right. */
+.cmp-timeline {
+  display: grid;
+  grid-template-columns: 180px minmax(0, 1fr);
+}
+@media (max-width: 639px) {
+  .cmp-timeline {
+    grid-template-columns: 110px minmax(0, 1fr);
+  }
+}
+.cmp-months {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+}
+.cmp-lane {
+  height: 2rem;
+}
+.cmp-bar {
+  top: 0.25rem;
+  bottom: 0.25rem;
+  border: 0;
+  cursor: pointer;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.cmp-bar:focus-visible {
+  outline: 2px solid var(--oa-ring, var(--oa-accent));
+  outline-offset: 1px;
+}
+.cmp-today {
+  width: 1px;
+}
+
+.cmp-facts {
+  grid-template-columns: 110px minmax(0, 1fr);
+  margin: 0;
+}
+
+.cmp-settings-list {
+  grid-template-columns: minmax(120px, 40%) minmax(0, 1fr);
+  margin: 0;
+}
+
+.cmp-code {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.cmp-pre {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.cmp-qr {
+  width: 10rem;
+  height: 10rem;
+}
+
+.cmp-channel-row {
+  grid-template-columns: minmax(0, 1fr) 12rem;
+  min-height: 2.25rem;
+}
+.cmp-goal-row {
+  grid-template-columns: 10rem 8rem minmax(0, 1fr) auto;
+}
+.cmp-task-row {
+  grid-template-columns: minmax(0, 1fr) 10rem 9rem auto;
+}
+.cmp-asset-row {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto;
+}
+@media (max-width: 639px) {
+  .cmp-channel-row,
+  .cmp-goal-row,
+  .cmp-task-row,
+  .cmp-asset-row {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.cmp-textarea {
+  width: 100%;
+  min-height: 6rem;
+  resize: vertical;
+  padding: 0.5rem 0.625rem;
+  border: 1px solid var(--oa-line-strong);
+  border-radius: 0.375rem;
+  background: var(--oa-surface);
+  color: var(--oa-fg);
+  font: inherit;
+  font-size: 0.8125rem;
+  font-weight: 400;
+}
+.cmp-textarea:focus-visible {
+  outline: 2px solid var(--oa-ring, var(--oa-accent));
+  outline-offset: 1px;
+}
+.cmp-months > span:first-child {
+  border-left: 0;
+}

@@ -1,0 +1,47 @@
+# Campaigns. Channels, naming rules, approvers and the links to Analytics, Messages, CRM, Audience, Automation and the
+# ad platforms are in campaigns.yaml; campaigns are planned in the UI.
+#
+#   openssl rand -hex 32 > openasy-kek   # the product's key: sign-in secrets (ADR 0021). Keep it with your backups
+#   docker compose up -d
+#   docker compose logs campaigns | grep 'no owner yet'   # the one-time link that creates the owner account
+services:
+  campaigns:
+    image: ghcr.io/openasy/campaigns:0.1.0
+    restart: unless-stopped
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+    tmpfs: [/tmp]
+    ports:
+      - "127.0.0.1:8080:8080" # UI and API; put a TLS proxy in front
+    volumes:
+      - campaigns-data:/data # SQLite database: campaigns, links, tasks, spend and the results read
+      - ./config:/config:ro # campaigns.yaml; mount the folder so an editor's save reaches it
+    secrets:
+      - openasy-kek # mounted at /run/secrets/openasy-kek
+    environment:
+      # The address people open Campaigns at; the link sent to Automation on launch uses it.
+      CAMPAIGNS_PUBLIC_URL: ${CAMPAIGNS_PUBLIC_URL:-http://localhost:8080}
+      CAMPAIGNS_CONFIG: /config/campaigns.yaml
+      # The secrets campaigns.yaml names, never written in the file itself:
+      # CAMPAIGNS_ANALYTICS_TOKEN: ${CAMPAIGNS_ANALYTICS_TOKEN}   # an Analytics token of the viewer role
+      # CAMPAIGNS_MESSAGES_TOKEN: ${CAMPAIGNS_MESSAGES_TOKEN}     # a Messages token of the viewer role
+      # CAMPAIGNS_CRM_TOKEN: ${CAMPAIGNS_CRM_TOKEN}               # a CRM token of the viewer role
+      # CAMPAIGNS_AUDIENCE_TOKEN: ${CAMPAIGNS_AUDIENCE_TOKEN}     # an Audience token of the viewer role
+      # CAMPAIGNS_AUTOMATION_TOKEN: ${CAMPAIGNS_AUTOMATION_TOKEN} # the launch playbook's webhook token (oah_...)
+      # CAMPAIGNS_GOOGLE_ADS_DEVELOPER_TOKEN: ${CAMPAIGNS_GOOGLE_ADS_DEVELOPER_TOKEN}
+      # CAMPAIGNS_GOOGLE_ADS_CLIENT_ID: ${CAMPAIGNS_GOOGLE_ADS_CLIENT_ID}
+      # CAMPAIGNS_GOOGLE_ADS_CLIENT_SECRET: ${CAMPAIGNS_GOOGLE_ADS_CLIENT_SECRET}
+      # CAMPAIGNS_GOOGLE_ADS_REFRESH_TOKEN: ${CAMPAIGNS_GOOGLE_ADS_REFRESH_TOKEN}
+      # CAMPAIGNS_META_TOKEN: ${CAMPAIGNS_META_TOKEN}             # a Meta system user's token with ads_read
+      # Sign in with your identity provider (OIDC), see the README:
+      # OPENASY_OIDC_ISSUER: https://login.example.com
+      # OPENASY_OIDC_CLIENT_ID: campaigns
+      # OPENASY_OIDC_CLIENT_SECRET: ${OPENASY_OIDC_CLIENT_SECRET}
+
+volumes:
+  campaigns-data:
+
+secrets:
+  openasy-kek:
+    file: ./openasy-kek

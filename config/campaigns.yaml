@@ -1,0 +1,58 @@
+# Campaigns' settings. This file is the only place they are changed; a change is picked up within a minute, and a
+# file with a mistake leaves the last good one in place. Campaigns, links, tasks and spend are worked in the UI.
+currency: TRY
+time_zone: Europe/Istanbul
+
+# The channels campaigns run on. medium is the utm_medium their links carry, so Analytics counts each visit for one
+# channel; messages names the Messages channel whose sends count here; ads the platform whose spend lands here.
+channels:
+  email: { name: Email, medium: email, messages: email }
+  sms: { name: SMS, medium: sms, messages: sms }
+  whatsapp: { name: WhatsApp, medium: whatsapp, messages: whatsapp }
+  paid-search: { name: Paid search, medium: cpc, sources: [google], ads: google }
+  paid-social: { name: Paid social, medium: paid-social, sources: [meta, instagram, linkedin], ads: meta }
+  social: { name: Social, medium: social, sources: [linkedin, instagram, x] }
+  partners: { name: Partners, medium: referral, sources: [partner] }
+  events: { name: Events and print, medium: qr, sources: [print, fair] }
+
+# How a campaign's utm_campaign is made, so one campaign never reports under two names.
+naming:
+  campaign: "{name}-{year}" # {name}, {year}, {quarter} (q4) and {month} (11)
+  pattern: "[a-z0-9]+(-[a-z0-9]+)*-20\\d\\d" # every utm_campaign must match this too
+  max_length: 40
+  sources: [newsletter, partner, website] # utm_source values of a channel that lists none of its own
+
+approvals:
+  approvers: [] # members (by email) every new campaign names; it cannot go live until each has approved
+
+attribution:
+  window: 90d # touches in the 90 days before a deal was won count; a deal counts for its first and its last campaign
+
+results:
+  every: 15m # how often Analytics, Messages, CRM and Audience are read
+  settle: 14d # an ended campaign's results are read for two more weeks, then kept as they were
+
+
+# The products results come from. Each token names the variable that holds it; the token needs the viewer role.
+# analytics: { url: http://analytics:8080, token: CAMPAIGNS_ANALYTICS_TOKEN, site: www }
+# messages: { url: http://messages:8080, token: CAMPAIGNS_MESSAGES_TOKEN }
+# crm: { url: http://crm:8080, token: CAMPAIGNS_CRM_TOKEN, pipeline: sales }
+# audience: { url: http://audience:8080, token: CAMPAIGNS_AUDIENCE_TOKEN } # the touches before a deal was won
+
+# A playbook in Automation that runs when a campaign is marked live (its webhook trigger and token).
+# automation:
+#   url: http://automation:8080
+#   launch: { playbook: pb_campaign_launch, token: CAMPAIGNS_AUTOMATION_TOKEN }
+
+# Spend read from the ad platforms, read-only. Campaigns never buys or changes ads.
+# ads:
+#   every: 6h
+#   days: 30 # each read replaces the last 30 days
+#   google:
+#     customer_id: 123-456-7890
+#     login_customer_id: 111-222-3333 # the manager account, when access is through one
+#     developer_token: CAMPAIGNS_GOOGLE_ADS_DEVELOPER_TOKEN
+#     client_id: CAMPAIGNS_GOOGLE_ADS_CLIENT_ID
+#     client_secret: CAMPAIGNS_GOOGLE_ADS_CLIENT_SECRET
+#     refresh_token: CAMPAIGNS_GOOGLE_ADS_REFRESH_TOKEN
+#   meta: { ad_account: act_1234567890, token: CAMPAIGNS_META_TOKEN } # a system user's token with ads_read
