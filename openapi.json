@@ -2,7 +2,7 @@
   "openapi": "3.1.0",
   "info": {
     "title": "OpenAsy Campaigns",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "description": "Campaigns in one calendar with their budget, goals, approvals, tagged links and spend, and what each brought from Analytics, Messages and CRM. Viewers read everything; editors plan and change campaigns; approvers named on a campaign approve it; admins also delete campaigns that ran.",
     "license": {
       "name": "AGPL-3.0-only",

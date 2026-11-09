@@ -1,6 +1,6 @@
 {
   "name": "@openasy/campaigns",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": true,
   "description": "OpenAsy Campaigns: every campaign in one calendar with its budget, goals, approvals and tagged links, and its results from Analytics, Messages and CRM against what it cost.",
   "license": "AGPL-3.0-only",
