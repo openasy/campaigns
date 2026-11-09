@@ -27,7 +27,7 @@ import { useState, type ReactNode } from "react";
 import type { Ctx } from "./App.tsx";
 import type { AdsRead, Campaign, CampaignDetail, Metric, Naming, Spend, SpendImported, SpendList } from "./api.ts";
 import { day, money, Notice, num, pct, roiText, useLoad, when } from "./common.tsx";
-import { useT, type T } from "./i18n.ts";
+import { useT, type T, viewerLocale } from "./i18n.ts";
 import { LinkBuilder, LinksTable } from "./links.tsx";
 import { shownOf, StateBadge, type Shown } from "./parts.tsx";
 import { ResultsTab } from "./results.tsx";
@@ -546,7 +546,7 @@ function Facts({ items }: { items: Array<[string, ReactNode]> }) {
   );
 }
 
-function goalText(t: T, g: { metric: Metric; target: number; goal: string | null }, tl: (n: number) => string, locale?: string) {
+function goalText(t: T, g: { metric: Metric; target: number; goal: string | null }, tl: (n: number) => string, locale: string = viewerLocale()) {
   if (g.metric === "revenue") return t("goal.revenue", { value: tl(g.target) });
   if (g.metric === "conversions") return t("goal.conversions", { value: num(g.target, locale), goal: g.goal ?? "" });
   return t(`goal.${g.metric}`, { value: num(g.target, locale) });
@@ -710,7 +710,7 @@ function BriefTab({ ctx, c, onChanged }: { ctx: Ctx; c: CampaignDetail; onChange
                         : t("approvals.waiting")}
                   </StatusBadge>
                 </span>
-                {a.note && <span className="pl-8 text-xs text-fg-muted">{a.note}</span>}
+                {a.note && <span className="ps-8 text-xs text-fg-muted">{a.note}</span>}
               </li>
             ))}
           </ul>

@@ -129,5 +129,5 @@ fieldset.border-0 {
   outline-offset: 1px;
 }
 .cmp-months > span:first-child {
-  border-left: 0;
+  border-inline-start: 0;
 }

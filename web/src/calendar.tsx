@@ -30,7 +30,7 @@ function Timeline({ campaigns, from, to, today }: { campaigns: Campaign[]; from:
         <span />
         <span className="cmp-months border-b border-line">
           {months.map((m) => (
-            <span key={m} className="border-l border-line px-1 py-1">
+            <span key={m} className="border-s border-line px-1 py-1">
               {monthName(m.slice(0, 7), locale)}
               {m.endsWith("-01-01") || m === months[0] ? ` ${m.slice(0, 4)}` : ""}
             </span>
@@ -45,7 +45,7 @@ function Timeline({ campaigns, from, to, today }: { campaigns: Campaign[]; from:
             const shown = shownOf(c);
             return (
               <li key={c.id} className="cmp-timeline items-center">
-                <span className="flex min-w-0 flex-col pr-2">
+                <span className="flex min-w-0 flex-col pe-2">
                   <span className="truncate text-sm text-fg">{c.name}</span>
                   <span className="truncate text-2xs text-fg-muted">{c.channels.map((ch) => ch.name).join(", ") || c.utm}</span>
                 </span>
@@ -55,7 +55,7 @@ function Timeline({ campaigns, from, to, today }: { campaigns: Campaign[]; from:
                     type="button"
                     aria-label={t("calendar.bar", { name: c.name, from: day(c.start, locale), to: day(c.end, locale), state: t(`state.${shown}`) })}
                     onClick={() => navigate(`/campaigns/${c.id}`)}
-                    className={cn("cmp-bar absolute truncate rounded px-1.5 text-left text-2xs font-medium", BAR[shown])}
+                    className={cn("cmp-bar absolute truncate rounded px-1.5 text-start text-2xs font-medium", BAR[shown])}
                     style={{ left: `${left}%`, width: `${Math.max(2, right - left)}%` }}
                   >
                     {c.name}
